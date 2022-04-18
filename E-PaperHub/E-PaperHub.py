@@ -73,13 +73,9 @@ class Application_SlowMovie:
     application_execution_path = config.SLOW_MOVIE_EXECUTION_PATH
     application_video_path = config.SLOW_MOVIE_VIDEO_PATH
     application_work_dir = WORK_DIR_ABSOLUTE_PATH + "/SlowMovie"
-    application_work_dir_data_path = application_work_dir + '/SlowMovie.json'
+    #application_work_dir_data_path = application_work_dir + '/SlowMovie.json'
     application_work_dir_std_output_path = application_work_dir + '/SlowMovie_output.txt'
     application_work_dir_std_output_file = None
-
-    config_file = ""
-    config_delay = 120
-    config_increment = 4
 
     # Has to be implemented
     def __init__(self):
@@ -90,12 +86,12 @@ class Application_SlowMovie:
             os.remove(self.application_work_dir_std_output_path)
 
         # Load old config if exiting
-        if os.path.exists(self.application_work_dir_data_path):
-            with open(self.application_work_dir_data_path, 'r', encoding='utf-8') as f:
-                config_data = json.load(f)
-                self.config_file = config_data['file']
-                self.config_delay = config_data['delay']
-                self.config_increment = config_data['increment']
+        # if os.path.exists(self.application_work_dir_data_path):
+        #     with open(self.application_work_dir_data_path, 'r', encoding='utf-8') as f:
+        #         config_data = json.load(f)
+        #         self.config_file = config_data['file']
+        #         self.config_delay = config_data['delay']
+        #         self.config_increment = config_data['increment']
         # Create and open output file
         self.application_work_dir_std_output_file = open(self.application_work_dir_std_output_path, 'w+')
     
@@ -107,17 +103,49 @@ class Application_SlowMovie:
 
     # Has to be implemented
     def start(self, args):
-        self.config_file = args['file']
-        self.config_delay = args['delay']
-        self.config_increment = args['increment']
+        print("start args:")
+        pprint(args) # DEBUG
+        file = args['file']
+        delay = args['delay']
+        increment = args['increment']
+        start_frame = args['start_frame']
+        random_frames = args['random_frames']
+        loop = args['loop']
+        random_play = args['random_play']
+        show_timecode = args['show_timecode']
+        show_subtitles = args['show_subtitles']
 
-        print("Start Application: " + self.application_name)
-        with open(self.application_work_dir_data_path, 'w', encoding='utf-8') as f:
-            config_data = { 'file': self.config_file, 'delay': self.config_delay, 'increment': self.config_increment }
-            json.dump(config_data, f, ensure_ascii=False, indent=4)
+        process_args = [
+            'python3', self.application_execution_path,
+            '--file', file, 
+            '--delay', delay, 
+            '--increment', increment, 
+            '--start', '1',
+            '--loglevel', 'DEBUG'
+        ]
+        # Only add start frame when >= 1. Else we skip that flag so video continues where stopped last time
+        if (int(start_frame) >= 1):
+            process_args.append('--start')
+            process_args.append(start_frame)
+        if random_frames:
+            process_args.append('--random-frames')
+        if loop:
+            process_args.append('--loop')
+        if random_play:
+            process_args.append('--random-file')
+        if show_timecode:
+            process_args.append('--timecode')
+        if show_subtitles:
+            process_args.append('--subtitles')
+        
+        print("Start Application: " + self.application_name) # DBUG
+        print("Args:") # DEBUG
+        pprint(process_args) # DEBUG
+        # with open(self.application_work_dir_data_path, 'w', encoding='utf-8') as f:
+        #     config_data = { 'file': self.config_file, 'delay': self.config_delay, 'increment': self.config_increment }
+        #     json.dump(config_data, f, ensure_ascii=False, indent=4)
         # (loglevel: DEBUG is neccesarry for parsing current progress later)
-        return subprocess.Popen(['python3', self.application_execution_path, '--file', self.config_file, '--delay', self.config_delay, '--increment', self.config_increment, '--start', '1',  '--loglevel', 'DEBUG'], 
-                stdout=self.application_work_dir_std_output_file, universal_newlines=True)
+        return subprocess.Popen(process_args, stdout=self.application_work_dir_std_output_file, universal_newlines=True)
 
     # Has to be implemented
     def stop(self):
@@ -213,8 +241,9 @@ class Application_SlowMovie:
 
 
 @eel.expose
-def slow_movie_start(file, delay, increment):
-    args = { 'file': file, 'delay': delay, 'increment': increment }
+def slow_movie_start(file, delay, increment, start_frame, random_frames, loop, random_play, show_timecode, show_subtitles):
+    args = { 'file': file, 'delay': delay, 'increment': increment, 'start_frame': start_frame, 
+             'random_frames': random_frames, 'loop': loop, 'random_play': random_play, 'show_timecode': show_timecode, 'show_subtitles': show_subtitles }
     result = start_application(APP_SLOW_MOVIE, args)
     return result
 

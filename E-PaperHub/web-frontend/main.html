@@ -76,7 +76,47 @@
                         <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Increment (Frames):</h6>
                         <input id="slow_movie_increment" type="number" min="1" value="4" name="custom-input-number" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none"></input>
                     </div>
-
+                    <!-- Start frame selection -->
+                    <div class="my-4">
+                        <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Start (Frame):</h6>
+                        0: continue<br>
+                        1: Start at beginning
+                        <input id="slow_movie_start_frame" type="number" min="0" value="1" name="custom-input-number" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none"></input>
+                    </div>
+                    <!-- Addition settings -->
+                    <div class="my-4">
+                        <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Additional settings:</h6>
+                        <div class="form-check">
+                            <input id="slow_movie_random_frames" type="checkbox" value="" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                                Random frames
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="slow_movie_loop" type="checkbox" value="" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                                Loop video
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="slow_movie_random_play" type="checkbox" value="" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                                Random playing
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="slow_movie_show_timecode" type="checkbox" value="" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                                Show timecode
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input id="slow_movie_show_subtitles" type="checkbox" value="" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                            <label class="form-check-label inline-block text-gray-800" for="flexCheckDefault">
+                                Show subtitiles
+                            </label>
+                        </div>
+                    </div>
                     <!-- Button selection -->
                     <div class="my-4">
                         <button id="slow_movie_btn_start" type="button" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Start</button>
@@ -205,11 +245,17 @@
 
         document.getElementById("slow_movie_btn_start").onclick = async function(event) {
             console.log("Start SlowMovie") // DEBUG
-            movie_path = document.querySelector('input[name="slow_movie_movie_radio_list"]:checked').value;
-            delay = document.querySelector('#slow_movie_delay').value;
-            increment = document.querySelector('#slow_movie_increment').value;
-            //console.log("Movie_path: " + movie_path + " delay: " + delay + " increment: " + increment)
-            let result = await eel.slow_movie_start(movie_path, delay, increment)()
+            movie_path = document.querySelector('input[name="slow_movie_movie_radio_list"]:checked').value
+            delay = document.querySelector('#slow_movie_delay').value
+            increment = document.querySelector('#slow_movie_increment').value
+            start_frame = document.querySelector('#slow_movie_start_frame').value
+            random_frames = document.querySelector('#slow_movie_random_frames').checked
+            loop = document.querySelector('#slow_movie_loop').checked
+            random_play = document.querySelector('#slow_movie_random_play').checked
+            show_timecode = document.querySelector('#slow_movie_show_timecode').checked
+            show_subtitles = document.querySelector('#slow_movie_show_subtitles').checked
+            // console.log("Movie_path: " + movie_path + " delay: " + delay + " increment: " + increment + " start_frame: " + start_frame + " loop: " + loop) // DEBUG
+            let result = await eel.slow_movie_start(movie_path, delay, increment, start_frame, random_frames, loop, random_play, show_timecode, show_subtitles)()
             slow_movie_to_play_mode()
         }
         document.getElementById("slow_movie_btn_stop").onclick = async function(event) {
