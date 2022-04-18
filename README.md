@@ -25,8 +25,8 @@ If you only want to control and run SlowMovie and no other applications [VSMP+ (
 ## Compatible applications
 - [SlowMovie](https://github.com/TomWhitwell/SlowMovie)
 
-## Current frontend
-![Play](/images/Play.jpg "Play.jpg")
+## Current frontend screenshots
+![Play](/images/Play.jpg "Play.jpg")  
 ![Progress](/images/Progress.jpg "Progress.jpg")
 
 ## ToDo:

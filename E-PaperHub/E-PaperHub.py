@@ -1,9 +1,7 @@
 # Pre requirements 
 #   - pip install eel
 from pprint import pprint
-from fileinput import filename
 from pathlib import Path
-from stat import FILE_ATTRIBUTE_SPARSE_FILE
 import subprocess
 import os
 import glob
