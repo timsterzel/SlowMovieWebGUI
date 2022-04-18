@@ -32,11 +32,11 @@
                         <div class="w-full bg-gray-200 h-5 mb-6">
                             <div id="slow_movie_progress" class="bg-blue-600 h-5" style="width: 0%"></div>
                         </div>
-                        <span id="slow_movie_playing_file"></span><br>
-                        Playtime: <span id="slow_movie_time_current"></span> / <span id="slow_movie_time_total"></span><br>
-                        Frame: <span id="slow_movie_frame_current">378</span> / <span id="slow_movie_frame_total">3065</span><br>
-                        Delay: <span id="slow_movie_delay_current"></span><br>
-                        Increment: <span id="slow_movie_incement_current"></span><br>
+                        <span id="slow_movie_playing_file">Loading data...</span><br>
+                        Playtime: <span id="slow_movie_time_current">...</span> / <span id="slow_movie_time_total">...</span><br>
+                        Frame: <span id="slow_movie_frame_current">...</span> / <span id="slow_movie_frame_total">...</span><br>
+                        Delay: <span id="slow_movie_delay_current">...</span> seconds<br>
+                        Increment: <span id="slow_movie_incement_current">...</span> frames<br>
                     </div>
                     <div id="slow_movie_progress_can_not_be_loaded" style="display: none">
                         <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
@@ -60,7 +60,7 @@
                                 <div id="slow_movie_movie_entry_form-" class="form-check">
                                     <input id="slow_movie_movie_entry_input-" type="radio" name="slow_movie_movie_radio_list" value="/path/to/movie.mp4" class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
                                     <label id="slow_movie_movie_entry_input_label-" class="form-check-label inline-block text-gray-800" for="slow_movie_movie_entry_input-">
-                                        {movie_name}
+                                        
                                     </label>
                                 </div>
                             </template>
@@ -79,8 +79,7 @@
                     <!-- Start frame selection -->
                     <div class="my-4">
                         <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Start (Frame):</h6>
-                        0: continue<br>
-                        1: Start at beginning
+                        <span class="text-sm">0: continue 1: Start at beginning</span>
                         <input id="slow_movie_start_frame" type="number" min="0" value="1" name="custom-input-number" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none"></input>
                     </div>
                     <!-- Addition settings -->
@@ -154,6 +153,16 @@
             // slow_movie_start_settings
             document.querySelector('#slow_movie_playing').style.display = 'block'
             document.querySelector('#slow_movie_start_settings').style.display = 'none'
+            // Clear view
+            document.querySelector('#slow_movie_progress').style.width = "0%"
+            document.querySelector('#slow_movie_playing_file').innerHTML = "Loading data..."
+            document.querySelector('#slow_movie_frame_current').innerHTML = "..."
+            document.querySelector('#slow_movie_frame_total').innerHTML = "..."
+            document.querySelector('#slow_movie_delay_current').innerHTML = "..."
+            document.querySelector('#slow_movie_incement_current').innerHTML = "..."
+            document.querySelector('#slow_movie_time_current').innerHTML = "..."
+            document.querySelector('#slow_movie_time_total').innerHTML = "..."
+
             // Update progress every 5 seconds
             slow_movie_data_update_interval = setInterval(update_slow_movie_live_data, 5 * 1000)
         }

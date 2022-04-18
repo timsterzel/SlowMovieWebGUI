@@ -117,10 +117,9 @@ class Application_SlowMovie:
 
         process_args = [
             'python3', self.application_execution_path,
-            '--file', file, 
-            '--delay', delay, 
-            '--increment', increment, 
-            '--start', '1',
+            '--file', file,
+            '--delay', delay,
+            '--increment', increment,
             '--loglevel', 'DEBUG'
         ]
         # Only add start frame when >= 1. Else we skip that flag so video continues where stopped last time
@@ -167,8 +166,8 @@ class Application_SlowMovie:
             return False
         with open(self.application_work_dir_std_output_path, 'r') as f:
             output = f.read()
-        print("Output: ")
-        print(output)
+        # print("Output: ") # DEBUG
+        # print(output) # DEBUG
         # Interval
         regex = r".*(?<=INFO:slowmovie:Update interval: )(.*)(?=)"
         matches_delay = re.findall(regex, output)
