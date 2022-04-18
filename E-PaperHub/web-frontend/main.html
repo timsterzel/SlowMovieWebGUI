@@ -107,15 +107,25 @@
 
 
         // SlowMovie
+        var slow_movie_data_update_interval = null
         function slow_movie_to_play_mode() {
+            console.log("slow_movie_to_play_mode") // DEBUG
             // slow_movie_playing
             // slow_movie_start_settings
             document.querySelector('#slow_movie_playing').style.display = 'block'
             document.querySelector('#slow_movie_start_settings').style.display = 'none'
+            // Update progress every 5 seconds
+            slow_movie_data_update_interval = setInterval(update_slow_movie_live_data, 5 * 1000)
         }
         function slow_movie_to_stop_mode() {
+            console.log("slow_movie_to_stop_mode") // DEBUG
             document.querySelector('#slow_movie_playing').style.display = 'none'
             document.querySelector('#slow_movie_start_settings').style.display = 'block'
+            if (slow_movie_data_update_interval !== null) {
+                console.log("slow_movie clearInterval") // DEBUG
+                clearInterval(slow_movie_data_update_interval);
+            }
+            
         }
 
         async function slow_movie_list() {
