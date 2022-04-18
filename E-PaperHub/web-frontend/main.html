@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Language" content="en">
+        <title>E-Paper HUB</title>
+        <script type="text/javascript" src="/eel.js"></script>
+        <script src="/libs/tailwindcss/tailwindcss.js"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
+            }
+        </script>
+        <!-- <script src="/js/main_header.js"></script> -->
+        <style type="text/tailwindcss">
+            /* Tailwind defaults */
+            @tailwind base;
+            @tailwind components;
+            @tailwind utilities;
+            @layer components {
+                
+            }
+        </style>
+    </head>
+    <body class="bg-zinc-100 text-gray-500">
+        <div class="flex justify-center">
+            <!-- SlowMovie -->
+            <div id="slow_movie_card" class="block p-6 rounded-lg shadow-lg bg-white w-96">
+                <h5 class="text-gray-900 text-xl leading-tight font-medium mb-2">SlowMovie</h5>
+                <div id="slow_movie_playing" style="display: none">
+                    <div id="slow_movie_progress_area">
+                        <div class="w-full bg-gray-200 h-5 mb-6">
+                            <div id="slow_movie_progress" class="bg-blue-600 h-5" style="width: 0%"></div>
+                        </div>
+                        <span id="slow_movie_playing_file"></span><br>
+                        Playtime: <span id="slow_movie_time_current"></span> / <span id="slow_movie_time_total"></span><br>
+                        Frame: <span id="slow_movie_frame_current">378</span> / <span id="slow_movie_frame_total">3065</span><br>
+                        Delay: <span id="slow_movie_delay_current"></span><br>
+                        Increment: <span id="slow_movie_incement_current"></span><br>
+                    </div>
+                    <div id="slow_movie_progress_can_not_be_loaded" style="display: none">
+                        <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                            <p class="font-bold">Unable to load data</p>
+                            <p>Unable to load live data for showing play progress.</p>
+                          </div>
+                    </div>
+                    
+                    <div class="my-4">
+                        <button id="slow_movie_btn_stop" type="button" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Stop</button>
+                    </div>
+                </div>
+
+                <div id="slow_movie_start_settings" style="display: block">
+                    <!-- Movie selection-->
+                    <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Movie:</h6>
+                    <div class="flex justify-start">
+                        <div id="slow_movie_movie_list">
+                            <!-- Entry-->
+                            <template id="slow_movie_movie_entry_template">
+                                <div id="slow_movie_movie_entry_form-" class="form-check">
+                                    <input id="slow_movie_movie_entry_input-" type="radio" name="slow_movie_movie_radio_list" value="/path/to/movie.mp4" class="form-check-input appearance-none rounded-full h-4 w-4 border border-gray-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2 cursor-pointer">
+                                    <label id="slow_movie_movie_entry_input_label-" class="form-check-label inline-block text-gray-800" for="slow_movie_movie_entry_input-">
+                                        {movie_name}
+                                    </label>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    <!-- Delay selection -->
+                    <div class="my-4">
+                        <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Delay (Seconds):</h6>
+                        <input id="slow_movie_delay" type="number" min="1" value="120" name="custom-input-number" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none"></input>
+                    </div>
+                    <!-- Increment selection -->
+                    <div class="my-4">
+                        <h6 class="text-gray-900 text-lg leading-tight font-medium mb-2">Increment (Frames):</h6>
+                        <input id="slow_movie_increment" type="number" min="1" value="4" name="custom-input-number" class="outline-none focus:outline-none text-center w-full bg-gray-300 font-semibold text-md hover:text-black focus:text-black  md:text-basecursor-default flex items-center text-gray-700 outline-none"></input>
+                    </div>
+
+                    <!-- Button selection -->
+                    <div class="my-4">
+                        <button id="slow_movie_btn_start" type="button" class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Start</button>
+                    </div>
+                </div>
+                
+                
+            </div>
+        </div>
+
+        <!-- style="display: none" -->
+        <!-- <script src="/js/main_footer.js"></script> -->
+    </body>
+    <script>
+        // General
+        async function load_running_application() {
+            console.log("get_running_application") // DEBUG
+            let running_application = await eel.get_running_application()()
+            console.log("Running application: " + running_application) // DEBUG
+            if (running_application == "SlowMovie") {
+                console.log("Running: SlowMovie") // DEBUG
+                slow_movie_to_play_mode()
+                update_slow_movie_live_data()
+            }
+        }
+
+        load_running_application()
+
+
+        // SlowMovie
+        function slow_movie_to_play_mode() {
+            // slow_movie_playing
+            // slow_movie_start_settings
+            document.querySelector('#slow_movie_playing').style.display = 'block'
+            document.querySelector('#slow_movie_start_settings').style.display = 'none'
+        }
+        function slow_movie_to_stop_mode() {
+            document.querySelector('#slow_movie_playing').style.display = 'none'
+            document.querySelector('#slow_movie_start_settings').style.display = 'block'
+        }
+
+        async function slow_movie_list() {
+            console.log("slow_movie_get_movie_list") // DEBUG
+            let movie_list = await eel.slow_movie_get_movie_list()()
+
+            let movie_list_parent = document.getElementById("slow_movie_movie_list")
+            let movie_list_template = document.getElementById("slow_movie_movie_entry_template")
+
+            for (let i = 0; i < movie_list.length; i++) {
+                movie_entry = movie_list[i]
+                movie_path = movie_entry['path']
+                movie_file = movie_entry['name']
+
+                // Clone movie entry template element
+                movie_entry_template_clone = movie_list_template.content.cloneNode(true)
+                // Get primary entry element
+                movie_entry_element_primary = movie_entry_template_clone.querySelector('#slow_movie_movie_entry_form-')
+                movie_entry_element_primary.id += i
+                // Get radio input
+                movie_entry_radio_input = movie_entry_template_clone.querySelector('#slow_movie_movie_entry_input-')
+                movie_entry_radio_input.id += i
+                movie_entry_radio_input.value = movie_path
+                if (i == 0) {
+                    movie_entry_radio_input.checked = true
+                }
+                // Get label
+                movie_entry_input_label = movie_entry_template_clone.querySelector('#slow_movie_movie_entry_input_label-')
+                movie_entry_input_label.id += i
+                movie_entry_input_label.htmlFor += i
+                movie_entry_input_label.innerHTML = movie_file
+                
+                // Add to parent element
+                movie_list_parent.appendChild(movie_entry_template_clone)
+            }
+            console.log(movie_list)
+        }
+
+        async function update_slow_movie_live_data() {
+            console.log("update_slow_movie_live_data") // DEBUG
+            let live_data = await eel.slow_movie_get_current_live_data()()
+            console.log(live_data) // DEBUG
+            if (!live_data) {
+                console.log("Live data return false")
+                // Show 'unable to load' info instead of progress
+                document.querySelector('#slow_movie_progress_area').style.display = 'none'
+                document.querySelector('#slow_movie_progress_can_not_be_loaded').style.display = 'block'
+                return
+            }
+            let file = live_data['file']
+            let current_frame = live_data['current_frame']
+            let total_frames = live_data['total_frames']
+            let delay = live_data['delay']
+            let increment = live_data['increment']
+            // Calculate progress in percentage
+            let progress = parseInt(((100.0 / total_frames) * current_frame) + 0.5)
+            // Get playtime formatted HH:MM:SS
+            let total_time_seconds = (total_frames / increment) * delay
+            let current_time_seconds = (current_frame / increment) * delay
+            let total_time_formatted = new Date(total_time_seconds * 1000).toISOString().substr(11, 8)
+            let current_time_formatted = new Date(current_time_seconds * 1000).toISOString().substr(11, 8)
+
+            document.querySelector('#slow_movie_progress').style.width = progress + "%"
+            document.querySelector('#slow_movie_playing_file').innerHTML = file
+            document.querySelector('#slow_movie_frame_current').innerHTML = current_frame
+            document.querySelector('#slow_movie_frame_total').innerHTML = total_frames
+            document.querySelector('#slow_movie_delay_current').innerHTML = delay
+            document.querySelector('#slow_movie_incement_current').innerHTML = increment
+            document.querySelector('#slow_movie_time_current').innerHTML = current_time_formatted
+            document.querySelector('#slow_movie_time_total').innerHTML = total_time_formatted
+
+            // Show progress
+            document.querySelector('#slow_movie_progress_area').style.display = 'block'
+            document.querySelector('#slow_movie_progress_can_not_be_loaded').style.display = 'none'
+        }
+        slow_movie_list()
+
+        document.getElementById("slow_movie_btn_start").onclick = async function(event) {
+            console.log("Start SlowMovie") // DEBUG
+            movie_path = document.querySelector('input[name="slow_movie_movie_radio_list"]:checked').value;
+            delay = document.querySelector('#slow_movie_delay').value;
+            increment = document.querySelector('#slow_movie_increment').value;
+            //console.log("Movie_path: " + movie_path + " delay: " + delay + " increment: " + increment)
+            let result = await eel.slow_movie_start(movie_path, delay, increment)()
+            slow_movie_to_play_mode()
+        }
+        document.getElementById("slow_movie_btn_stop").onclick = async function(event) {
+            console.log("Stop SlowMovie") // DEBUG
+            let result = await eel.slow_movie_stop()()
+            slow_movie_to_stop_mode()
+        }
+    </script>
+</html>
