@@ -244,26 +244,8 @@ if result != False:
 if RUNNING_APP == APP_SLOW_MOVIE.application_name:
     resume_application(APP_SLOW_MOVIE)
 
-eel.sleep(10) # DEBUG
-live_data = APP_SLOW_MOVIE.get_current_live_data() # DEBUG
-pprint(live_data) # DEBUG
-# while True:
-#     output = PROCESS_CURRENT.stdout.readline()
-#     if PROCESS_CURRENT.poll() is not None:
-#         break
-#     if output:
-#         print (output.strip())
-# rc = PROCESS_CURRENT.poll()
-
-#print("APP output:")
-#print(app_output)
-
-
-# Init webserver
+# Init local webserver
 eel.init('web-frontend', allowed_extensions=['.js', '.html'])
-# Let eel choose available port
-#eel.start('main.html', port=0)
-# Use default port
 eel.start('main.html', mode="None", host=config.IP, port=config.PORT)
 
 
