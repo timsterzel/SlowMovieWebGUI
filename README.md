@@ -17,6 +17,11 @@ Also you have to configurate the location of the SlowMovie application and the d
   
 Applications started by E-PaperHub are started as subprocess within the python script.  
 
+To start E-PaperHub:  
+```
+python3 E-PaperHub.py
+```
+
 ## SlowMovie implementation
 The implementation and control of SlowMovie is realizied without any modification of the SlowMovie code. Instead SlowMovie is controlled by stopping and restarting the application with the right command line arguments. The current progress is parsed from the application Info and Debug output. As parsing application output usually isn't a recommended way of retrieving data, this future might break when new SlowMovie Versions are out. But for now it is working and seem to be a sufficient way to get the information needed, without forking SlowMovie.
   
