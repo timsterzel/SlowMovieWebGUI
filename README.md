@@ -23,7 +23,7 @@ python3 slowmovie_web_gui.py
 ```
 
 ## Implementation Details
-The implementation and control of SlowMovie is realizied without any modification of the SlowMovie code. Instead SlowMovie Web GUI is a wrapper around the SlowMovie command line application. SlowMovie is controlled by stopping and restarting the application with the right command line arguments. The current progress is parsed from the application Info and Debug output. As parsing application output usually isn't a recommended way of retrieving data, this future might break when new SlowMovie Versions are out. But for now it is working and seem to be a sufficient way to get the information needed, without forking SlowMovie
+The implementation and control of SlowMovie is realizied without any modification of the SlowMovie code. Instead SlowMovie Web GUI is a wrapper around the SlowMovie command line application. SlowMovie is controlled by stopping and restarting the application with the right command line arguments. The current progress is parsed from the application Info and Debug output. As parsing application output usually isn't a recommended way of retrieving data, this future might break when new SlowMovie Versions are out. But for now it is working and seem to be a sufficient way to get the information needed, without forking SlowMovie.
   
 If you are looking for a more stable way to play and control played movies take a look at [VSMP+ (Very Slow Media Player Plus)](https://github.com/robweber/vsmp-plus) as SlowMovie alternative.
 
