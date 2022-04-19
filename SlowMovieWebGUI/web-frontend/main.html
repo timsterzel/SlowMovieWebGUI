@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="Content-Language" content="en">
-        <title>E-Paper HUB</title>
+        <title>SlowMovie Web GUI</title>
         <script type="text/javascript" src="/eel.js"></script>
         <script src="/libs/tailwindcss/tailwindcss.js"></script>
         <script>
@@ -131,19 +131,16 @@
     </body>
     <script>
         // General
-        async function load_running_application() {
+        async function load_slow_movie_state() {
             console.log("get_running_application") // DEBUG
-            let running_application = await eel.get_running_application()()
-            console.log("Running application: " + running_application) // DEBUG
-            if (running_application == "SlowMovie") {
+            let is_running = await eel.slow_movie_is_running()()
+            if (is_running) {
                 console.log("Running: SlowMovie") // DEBUG
                 slow_movie_to_play_mode()
                 update_slow_movie_live_data()
             }
         }
-
-        load_running_application()
-
+        load_slow_movie_state()
 
         // SlowMovie
         var slow_movie_data_update_interval = null
