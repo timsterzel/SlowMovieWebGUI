@@ -24,17 +24,27 @@ def prepare_and_init():
     # Create work dir if not exists
     Path(WORK_DIR_ABSOLUTE_PATH).mkdir(parents=True, exist_ok=True)
 
-def was_application_running():
+def get_saved_application_state():
     if not os.path.exists(APP_STATE_FILE_PATH):
-        return False
+        return { 'running': False }
     with open(APP_STATE_FILE_PATH, 'r', encoding='utf-8') as f:
         data = json.load(f)
-        return data['running']
+        return data
 
-def resume_application():
+def resume_application(args):
         global PROCESS, APP_STD_OUTPUT_FILE
-        # Start without args => resume where stopped last time (loglevel: DEBUG is neccesarry for parsing current progress later)
-        PROCESS =  subprocess.Popen(['python3', config.SLOW_MOVIE_EXECUTION_PATH, '--loglevel', 'DEBUG'], 
+        # For resume only use the args which are not automatically restored by SlowMovie already (other args like the file can differ from the stored one, 
+        # because SlowMovie can automatically start the next video)
+        delay = args['delay']
+        increment = args['increment']
+        # Start with minimum of args to restore last state => The last played movie will start where stopped last (loglevel: DEBUG is neccesarry for parsing current progress later)
+        process_args = [
+            'python3', config.SLOW_MOVIE_EXECUTION_PATH,
+            '--delay', delay,
+            '--increment', increment,
+            '--loglevel', 'DEBUG'
+        ]
+        PROCESS =  subprocess.Popen(process_args, 
             stdout=APP_STD_OUTPUT_FILE, universal_newlines=True)
 
 def start_application(args):
@@ -43,8 +53,8 @@ def start_application(args):
     pprint(args) # DEBUG
     if PROCESS is None:
         with open(APP_STATE_FILE_PATH, 'w', encoding='utf-8') as f:
-            config_data = { 'running': True }
-            json.dump(config_data, f, ensure_ascii=False, indent=4)
+            args['running'] = True
+            json.dump(args, f, ensure_ascii=False, indent=4)
         
         file = args['file']
         delay = args['delay']
@@ -224,8 +234,9 @@ if os.path.exists(APP_STD_OUTPUT_FILE_PATH):
 APP_STD_OUTPUT_FILE = open(APP_STD_OUTPUT_FILE_PATH, 'w+')
 
 # Restart application when it was running before
-if was_application_running():
-    resume_application()
+saved_application_state = get_saved_application_state() 
+if saved_application_state['running']:
+    resume_application(saved_application_state)
 
 # Init local webserver
 eel.init('web-frontend', allowed_extensions=['.js', '.html'])
