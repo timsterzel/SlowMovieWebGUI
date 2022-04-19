@@ -240,4 +240,5 @@ if saved_application_state['running']:
 
 # Init local webserver
 eel.init('web-frontend', allowed_extensions=['.js', '.html'])
+# mode=none so no local browser is started
 eel.start('main.html', mode="None", host=config.IP, port=config.PORT)
