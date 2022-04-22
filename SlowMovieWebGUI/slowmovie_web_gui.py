@@ -218,7 +218,9 @@ saved_application_state = get_saved_application_state()
 if saved_application_state['running']:
     resume_application(saved_application_state)
 
+site_root = "index.html"
+print("Frontend is accessible under: http://" + config.HOST + ":" + str(config.PORT))
 # Init local webserver
 eel.init('web-frontend', allowed_extensions=['.js', '.html'])
 # mode=none so no local browser is started
-eel.start('main.html', mode="None", host=config.HOST, port=config.PORT)
+eel.start(site_root, mode="None", host=config.HOST, port=config.PORT)
