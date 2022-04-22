@@ -204,6 +204,28 @@
             console.log(movie_list)
         }
 
+        function seconds_to_time_str(seconds) {
+            seconds = Number(seconds)
+            let d = Math.floor(seconds / (3600*24))
+            let h = Math.floor(seconds % (3600*24) / 3600)
+            let m = Math.floor(seconds % 3600 / 60)
+            let s = Math.floor(seconds % 60)
+            // Add a leading '0' if value is smaller than 10
+            h = String(h).padStart(2, '0')
+            m = String(m).padStart(2, '0')
+            s = String(s).padStart(2, '0')
+            
+            let time_str = ""
+            if (d != 0) {
+                time_str += d + "d "
+            }
+            if (h !== '00') {
+                time_str += h + ":"
+            }
+            time_str += m + ":" + s
+            return time_str
+        }
+
         async function update_slow_movie_live_data() {
             let live_data = await eel.slow_movie_get_current_live_data()()
             if (!live_data) {
@@ -223,8 +245,8 @@
             // Get playtime formatted HH:MM:SS
             let total_time_seconds = (total_frames / increment) * delay
             let current_time_seconds = (current_frame / increment) * delay
-            let total_time_formatted = new Date(total_time_seconds * 1000).toISOString().substr(11, 8)
-            let current_time_formatted = new Date(current_time_seconds * 1000).toISOString().substr(11, 8)
+            let total_time_formatted = seconds_to_time_str(total_time_seconds)
+            let current_time_formatted = seconds_to_time_str(current_time_seconds)
 
             document.querySelector('#slow_movie_progress').style.width = progress + "%"
             document.querySelector('#slow_movie_playing_file').innerHTML = file
