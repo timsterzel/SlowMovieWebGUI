@@ -1,5 +1,5 @@
 # SlowMovie Web GUI
-A GUI frontend to control [SlowMovie Player](https://github.com/TomWhitwell/SlowMovie) for E-Paper Displays on a raspberry pi.
+A web frontend to control [SlowMovie Player](https://github.com/TomWhitwell/SlowMovie) for E-Paper Displays on a raspberry pi.
   
 Goal of the project is to provide a web interface, accessible within the same network to control SlowMovie running on your raspberry pi.  
   
