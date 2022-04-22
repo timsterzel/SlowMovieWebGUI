@@ -49,8 +49,6 @@ def resume_application(args):
 
 def start_application(args):
     global PROCESS
-    print("start args:") # DEBUG
-    pprint(args) # DEBUG
     if PROCESS is None:
         with open(APP_STATE_FILE_PATH, 'w', encoding='utf-8') as f:
             args['running'] = True
@@ -88,8 +86,6 @@ def start_application(args):
         if show_subtitles:
             process_args.append('--subtitles')
         
-        print("Execution args:") # DEBUG
-        pprint(process_args) # DEBUG
         # (loglevel: DEBUG is neccesarry for parsing current progress later)
         PROCESS = subprocess.Popen(process_args, stdout=APP_STD_OUTPUT_FILE, universal_newlines=True)
         return True
@@ -125,32 +121,24 @@ def get_current_live_data():
         return False
     with open(APP_STD_OUTPUT_FILE_PATH, 'r') as f:
         output = f.read()
-    # print("Output: ") # DEBUG
-    # print(output) # DEBUG
     # Interval
     regex = r".*(?<=INFO:slowmovie:Update interval: )(.*)(?=)"
     matches_delay = re.findall(regex, output)
-    pprint(matches_delay) # DEBUG
     # Delay
     regex = r".*(?<=INFO:slowmovie:Frame increment: )(.*)(?=)"
     matches_increment = re.findall(regex, output)
-    pprint(matches_increment) # DEBUG
     # file
     regex = r".*(?<=INFO:slowmovie:Playing ')(.*)(?=')"
     matches_file = re.findall(regex, output)
-    pprint(matches_file) # DEBUG
     # total frames
     regex = r".*(?<=INFO:slowmovie:Video info: )(.*)(?= frames)"
     matches_frames_total = re.findall(regex, output)
-    pprint(matches_frames_total) # DEBUG
 
     # Nothing found when sum is smaller 1
     if (len(matches_delay) + len(matches_increment) + len(matches_file) + len(matches_frames_total) < 1):
-        print("Nothing found. Sum < 1") # DEBUG
         return False
     # When match count is not same the newest output is not complete, so return false 
     # if not (len(matches_delay) == len(matches_increment) == len(matches_file) == len(matches_frames_total)):
-    #     print("Match count is not same") # DEBUG
     #     return False
     
     # They are different ways to get current frame, but not all are always available. When possible, always use "Current frame" as real current frame. 
@@ -168,8 +156,6 @@ def get_current_live_data():
         matches_frames_starting = re.findall(regex, output)
         if len(matches_frames_starting) >= 1:
             current_frame = matches_frames_starting[-1]
-        print("matches_frames_starting") # DEBUG
-        pprint(matches_frames_starting) # DEBUG
 
     # Resume frame is most recent informatiom
     if (pos_frame_resume > pos_frame_start) and (pos_frame_resume > pos_frame_display):
@@ -177,8 +163,6 @@ def get_current_live_data():
         matches_frames_resume = re.findall(regex, output)
         if len(matches_frames_resume) >= 1:
             current_frame = matches_frames_resume[-1]
-        print("matches_frames_resume") # DEBUG
-        pprint(matches_frames_resume) # DEBUG
 
     # Display frame is most recent informatiom
     if (pos_frame_display > pos_frame_start) and (pos_frame_display > pos_frame_resume):
@@ -186,8 +170,6 @@ def get_current_live_data():
         matches_frame_current = re.findall(regex, output)
         if len(matches_frame_current) >= 1:
             current_frame = matches_frame_current[-1]
-        print("matches_frame_current") # DEBUG
-        pprint(matches_frame_current) # DEBUG
 
     file = matches_file[-1]
     delay = matches_delay[-1]
@@ -222,8 +204,6 @@ def slow_movie_get_movie_list():
 @eel.expose
 def slow_movie_get_current_live_data():
     live_data = get_current_live_data()
-    print("Current live data:") # DEBUG
-    pprint(live_data) # DEBUG
     return live_data
 
 

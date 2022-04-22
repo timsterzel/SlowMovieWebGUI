@@ -132,10 +132,8 @@
     <script>
         // General
         async function load_slow_movie_state() {
-            console.log("get_running_application") // DEBUG
             let is_running = await eel.slow_movie_is_running()()
             if (is_running) {
-                console.log("Running: SlowMovie") // DEBUG
                 slow_movie_to_play_mode()
                 update_slow_movie_live_data()
             }
@@ -145,7 +143,6 @@
         // SlowMovie
         var slow_movie_data_update_interval = null
         function slow_movie_to_play_mode() {
-            console.log("slow_movie_to_play_mode") // DEBUG
             // slow_movie_playing
             // slow_movie_start_settings
             document.querySelector('#slow_movie_playing').style.display = 'block'
@@ -164,18 +161,15 @@
             slow_movie_data_update_interval = setInterval(update_slow_movie_live_data, 5 * 1000)
         }
         function slow_movie_to_stop_mode() {
-            console.log("slow_movie_to_stop_mode") // DEBUG
             document.querySelector('#slow_movie_playing').style.display = 'none'
             document.querySelector('#slow_movie_start_settings').style.display = 'block'
             if (slow_movie_data_update_interval !== null) {
-                console.log("slow_movie clearInterval") // DEBUG
-                clearInterval(slow_movie_data_update_interval);
+                clearInterval(slow_movie_data_update_interval)
             }
             
         }
 
         async function slow_movie_list() {
-            console.log("slow_movie_get_movie_list") // DEBUG
             let movie_list = await eel.slow_movie_get_movie_list()()
 
             let movie_list_parent = document.getElementById("slow_movie_movie_list")
@@ -211,9 +205,7 @@
         }
 
         async function update_slow_movie_live_data() {
-            console.log("update_slow_movie_live_data") // DEBUG
             let live_data = await eel.slow_movie_get_current_live_data()()
-            console.log(live_data) // DEBUG
             if (!live_data) {
                 console.log("Live data return false")
                 // Show 'unable to load' info instead of progress
@@ -250,7 +242,6 @@
         slow_movie_list()
 
         document.getElementById("slow_movie_btn_start").onclick = async function(event) {
-            console.log("Start SlowMovie") // DEBUG
             movie_path = document.querySelector('input[name="slow_movie_movie_radio_list"]:checked').value
             delay = document.querySelector('#slow_movie_delay').value
             increment = document.querySelector('#slow_movie_increment').value
@@ -260,12 +251,10 @@
             random_play = document.querySelector('#slow_movie_random_play').checked
             show_timecode = document.querySelector('#slow_movie_show_timecode').checked
             show_subtitles = document.querySelector('#slow_movie_show_subtitles').checked
-            // console.log("Movie_path: " + movie_path + " delay: " + delay + " increment: " + increment + " start_frame: " + start_frame + " loop: " + loop) // DEBUG
             let result = await eel.slow_movie_start(movie_path, delay, increment, start_frame, random_frames, loop, random_play, show_timecode, show_subtitles)()
             slow_movie_to_play_mode()
         }
         document.getElementById("slow_movie_btn_stop").onclick = async function(event) {
-            console.log("Stop SlowMovie") // DEBUG
             let result = await eel.slow_movie_stop()()
             slow_movie_to_stop_mode()
         }
