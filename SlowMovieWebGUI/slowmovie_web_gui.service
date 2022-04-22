@@ -1,0 +1,12 @@
+[Unit]
+Description=Slow Movie Player Web GUI Service
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi/SlowMovieWebGUI
+ExecStart=/usr/bin/python3 /home/pi/SlowMovieWebGUI/slowmovie_web_gui.py
+StandardOutput=null
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
