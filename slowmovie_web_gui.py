@@ -7,6 +7,7 @@ import os
 import glob
 import json
 import re
+import socket
 import eel
 
 # Load config
@@ -222,5 +223,14 @@ site_root = "index.html"
 print("Frontend is accessible under: http://" + config.HOST + ":" + str(config.PORT))
 # Init local webserver
 eel.init('web-frontend', allowed_extensions=['.js', '.html'])
-# mode=none so no local browser is started
-eel.start(site_root, mode="None", host=config.HOST, port=config.PORT)
+
+# Try to connect and repeat if not possible aftwr waiting a while
+try_to_connect = True
+while(try_to_connect):
+    try:
+        # mode=none so no local browser is started
+        eel.start(site_root, mode="None", host=config.HOST, port=config.PORT)
+    except socket.error as message:
+        print("Failed: " + str(message))
+        print("Wait before retry to connect...")
+        eel.sleep(60)
