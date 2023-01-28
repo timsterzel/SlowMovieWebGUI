@@ -222,7 +222,7 @@ if saved_application_state['running']:
 site_root = "index.html"
 print("Frontend is accessible under: http://" + config.HOST + ":" + str(config.PORT))
 # Init local webserver
-eel.init('web-frontend', allowed_extensions=['.js', '.html'])
+eel.init(SCRIPT_ABSOLUTE_PATH + '/web-frontend', allowed_extensions=['.js', '.html'])
 
 # Try to connect and repeat if not possible aftwr waiting a while
 try_to_connect = True
