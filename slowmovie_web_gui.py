@@ -120,8 +120,23 @@ def get_current_live_data():
     output = ""
     if APP_STD_OUTPUT_FILE is None:
         return False
+    
+    # Read part of the file (maximum ~8kb for performance reason)
     with open(APP_STD_OUTPUT_FILE_PATH, 'r') as f:
+        # Jump to end of file
+        f.seek(0, 2)
+        file_size = f.tell()
+        # Start ~8kb from end
+        start_read = max(0, file_size - 8192)
+        # Read until end
+        f.seek(start_read)
         output = f.read()
+        # Skip partial first line if we didn't read from start
+        if start_read > 0:
+            nl = output.find('\n')
+            if nl != -1:
+                output = output[nl + 1:]
+
     # Interval
     regex = r".*(?<=INFO:slowmovie:Update interval: )(.*)(?=)"
     matches_delay = re.findall(regex, output)
