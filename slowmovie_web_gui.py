@@ -222,6 +222,9 @@ def slow_movie_get_current_live_data():
     live_data = get_current_live_data()
     return live_data
 
+def on_close(page, sockets):
+    print(f"Client disconnected. Open sockets: {len(sockets)}")
+    # Don't exist. Keep running and waiting for reconnects
 
 # Inits
 prepare_and_init()
@@ -244,7 +247,7 @@ try_to_connect = True
 while(try_to_connect):
     try:
         # mode=none so no local browser is started
-        eel.start(site_root, mode="None", host=config.HOST, port=config.PORT)
+        eel.start(site_root, mode="None", host=config.HOST, port=config.PORT, close_callback=on_close)
     except socket.error as message:
         print("Failed: " + str(message))
         print("Wait before retry to connect...")
