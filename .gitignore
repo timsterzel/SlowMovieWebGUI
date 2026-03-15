@@ -154,4 +154,5 @@ cython_debug/
 .~lock.*
 
 # Specific
+config.py
 
